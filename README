@@ -1,3 +1,15 @@
+ADDENDUM:
+
+I am not a vimscript user, but I do develp on OSX, and the plugin would not work as-is for me.  I made enough tweaks so that I can edit the file in the default changelist automatically when I edit a RO file in a Perforce project.  That's about it.
+
+At some point I will revisit and cleanup, perhaps.  For now I just wanted automatic file checkout instead of having to pull up the Perforce GUI
+
+Eric Asberry
+eric@ericasberry.com
+
+
+ORIGINAL:
+
 This is a mirror of http://www.vim.org/scripts/script.php?script_id=167
 
 Perforce is a source control system from http://www.perforce.com
