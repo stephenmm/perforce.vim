@@ -123,8 +123,10 @@ endfunction
 " A wrapper around a p4 command line for the current buffer
 "----------------------------------------------------------------------------
 function s:P4ShellCommandCurrentBuffer( sCmd )
-                let filename = expand( "%:p" )
-                return s:P4ShellCommand( a:sCmd . " " . filename )
+     let filename = expand( "%:p" )
+
+     return s:P4ShellCommand( a:sCmd . " " . filename )
+     "let foo = confirm("Execute " . a:sCmd . " " . filename )
 endfunction
 
 "----------------------------------------------------------------------------
@@ -340,14 +342,15 @@ function s:P4OpenFileForEdit()
     endif
     let listnum = ""
     let listnum = s:P4GetChangelist( "Current changelists:\n" . s:P4GetChangelists(0) . "\nEnter changelist number: ", b:changelist )
-    if listnum == ""
-        echomsg "No changelist specified. Edit cancelled."
-        return
-    endif
-    if empty("listnum")
+"    if listnum == ""
+"        echomsg "No changelist specified. Edit cancelled."
+"        return
+"    endif
+    if !exists("listnum") || listnum == ""
       "default changelist
       call s:P4ShellCommandCurrentBuffer( action )
     else
+      "let foo=confirm("changelist not empty: [" . listnum . "]")
       call s:P4ShellCommandCurrentBuffer( action . " -c " . listnum )
     endif
     if v:errmsg != ""
