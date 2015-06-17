@@ -103,11 +103,11 @@ if( strlen( &rulerformat ) == 0 ) && ( p4SetRuler == 1 )
 endif
 
 "Basic check for p4-enablement
-if executable( "p4.exe" )
+"if executable( "p4.exe" )
     let s:PerforceExecutable="p4" 
-else
-    augroup! perforce
-endif 
+"    else
+"  augroup! perforce
+"endif 
 
 "----------------------------------------------------------------------------
 " Minimal execution of a p4 command, followed by re-opening
@@ -150,6 +150,9 @@ endfunction
 " Return the p4 command line string
 "----------------------------------------------------------------------------
 function s:P4GetShellCommand( sCmd )
+    if !exists('s:PerforceExecutable')
+      let s:PerforceExecutable = "p4"
+    endif
     return s:PerforceExecutable . " " . a:sCmd
 endfunction
 
@@ -327,6 +330,9 @@ function s:P4OpenFileForEdit()
             endif
         endif
     endif
+    if !exists("b:headrev")
+      let b:headrev = ""
+    endif
     if (b:headrev == "" || b:action == "add")
         let action = "add"
     else
@@ -338,7 +344,12 @@ function s:P4OpenFileForEdit()
         echomsg "No changelist specified. Edit cancelled."
         return
     endif
-    call s:P4ShellCommandCurrentBuffer( action . " -c " . listnum )
+    if empty("listnum")
+      "default changelist
+      call s:P4ShellCommandCurrentBuffer( action )
+    else
+      call s:P4ShellCommandCurrentBuffer( action . " -c " . listnum )
+    endif
     if v:errmsg != ""
         echoerr "Unable to open file for " action . ". " . v:errmsg
         return
