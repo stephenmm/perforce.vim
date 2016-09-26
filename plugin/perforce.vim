@@ -57,28 +57,28 @@ augroup perforce
   command -nargs=0 PerforceLaunch :call <SID>P4LaunchFromP4()
 
   " menus
-  menu <silent> &Perforce.&Login :call <SID>P4Login()<CR>
-  menu <silent> &Perforce.Info :echo <SID>P4GetInfo()<CR>
-  menu <silent> Perforce.-Sep1- :
-  menu <silent> &Perforce.Show\ file\ &annotated :echo <SID>P4AnnotateFile()<CR>
-  menu <silent> &Perforce.List\ file\ &versions :echo <SID>P4VersionsFile()<CR>
-  menu <silent> &Perforce.&Diff :echo <SID>P4DiffFile()<CR>
-  menu <silent> &Perforce.&Unified diff :echo <SID>P4UDiffFile()<CR>
-  menu <silent> &Perforce.&Edit :call <SID>P4OpenFileForEdit()<CR>
-  menu <silent> &Perforce.Mark\ file\ for\ deletion :call <SID>P4OpenFileForDeletion()<CR>
-  menu <silent> &Perforce.&Revert :call <SID>P4RevertFile()<CR>
-  menu <silent> &Perforce.S&ync :echo <SID>P4SyncFile()<CR>
-  menu <silent> &Perforce.&Status :echo <SID>P4GetFileStatus()<CR>
-  menu <silent> Perforce.-Sep2- :
-  menu <silent> &Perforce.Submit\ changelist :call <SID>P4SubmitChangelist()<CR>
-  menu <silent> Perforce.-Sep3- :
-  menu <silent> &Perforce.&Create\ changelist :call <SID>P4CreateChangelist()<CR>
-  menu <silent> &Perforce.Diff\ all\ files :echo <SID>P4DiffFiles()<CR>
-  menu <silent> &Perforce.Unified diff\ all\ files :echo <SID>P4UDiffFiles()<CR>
-  menu <silent> &Perforce.Delete\ changelist :call <SID>P4DeleteChangelist()<CR>
-  menu <silent> &Perforce.List\ change&lists :echo <SID>P4GetChangelists(1)<CR>
-  menu <silent> &Perforce.Get\ changelist\ info :echo <SID>P4GetChangelistInfo()<CR>
-  menu <silent> &Perforce.List\ &file\ names :echo <SID>P4GetFiles()<CR>
+  menu <silent> &P4.&Login :call <SID>P4Login()<CR>
+  menu <silent> &P4.Info :echo <SID>P4GetInfo()<CR>
+  menu <silent>  P4.-Sep1- :
+  menu <silent> &P4.Show\ file\ &annotated :echo <SID>P4AnnotateFile()<CR>
+  menu <silent> &P4.List\ file\ &versions :echo <SID>P4VersionsFile()<CR>
+  menu <silent> &P4.&Diff :echo <SID>P4DiffFile()<CR>
+  menu <silent> &P4.&Unified diff :echo <SID>P4UDiffFile()<CR>
+  menu <silent> &P4.&Edit :call <SID>P4OpenFileForEdit()<CR>
+  menu <silent> &P4.Mark\ file\ for\ deletion :call <SID>P4OpenFileForDeletion()<CR>
+  menu <silent> &P4.&Revert :call <SID>P4RevertFile()<CR>
+  menu <silent> &P4.S&ync :echo <SID>P4SyncFile()<CR>
+  menu <silent> &P4.&Status :echo <SID>P4GetFileStatus()<CR>
+  menu <silent>  P4.-Sep2- :
+  menu <silent> &P4.Submit\ changelist :call <SID>P4SubmitChangelist()<CR>
+  menu <silent>  P4.-Sep3- :
+  menu <silent> &P4.&Create\ changelist :call <SID>P4CreateChangelist()<CR>
+  menu <silent> &P4.Diff\ all\ files :echo <SID>P4DiffFiles()<CR>
+  menu <silent> &P4.Unified diff\ all\ files :echo <SID>P4UDiffFiles()<CR>
+  menu <silent> &P4.Delete\ changelist :call <SID>P4DeleteChangelist()<CR>
+  menu <silent> &P4.List\ change&lists :echo <SID>P4GetChangelists(1)<CR>
+  menu <silent> &P4.Get\ changelist\ info :echo <SID>P4GetChangelistInfo()<CR>
+  menu <silent> &P4.List\ &file\ names :echo <SID>P4GetFiles()<CR>
 augroup END
 
 "----------------------------------------------------------------------------
@@ -366,7 +366,7 @@ endfunction
 " Print annotated version of file
 "----------------------------------------------------------------------------
 function s:P4AnnotateFile()
-    let p = s:P4ShellCommandCurrentBuffer( "annotate -q -db")
+    let p = s:P4ShellCommandCurrentBuffer( "annotate -u -q -db")
     return p
 endfunction
 
