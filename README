@@ -1,11 +1,9 @@
 ADDENDUM:
 
-I am not a vimscript user, but I do develp on OSX, and the plugin would not work as-is for me.  I made enough tweaks so that I can edit the file in the default changelist automatically when I edit a RO file in a Perforce project.  That's about it.
-
-At some point I will revisit and cleanup, perhaps.  For now I just wanted automatic file checkout instead of having to pull up the Perforce GUI
-
-Eric Asberry
-eric@ericasberry.com
+At some point when I get some time I am going to improve the annotate/blame command to make it more usefull:
+  1. Include user and date for each line
+  2. Have it as a side "tethered" split window. I am pretty sure the git version of blame does this so I will look at that code and replicate for perforce.
+I also want to make sure it work correctly for Linux out of the box.
 
 
 ORIGINAL:
