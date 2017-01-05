@@ -316,7 +316,7 @@ endfunction
 " Open a file for editing, with more checking than just wrapping the command
 "----------------------------------------------------------------------------
 function s:P4OpenFileForEdit()
-    if (b:headrev == "" || b:action == "add")
+    if (b:action == "add")
         let action = "add"
     else
         let action = "edit"
