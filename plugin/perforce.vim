@@ -316,7 +316,15 @@ endfunction
 " Open a file for editing, with more checking than just wrapping the command
 "----------------------------------------------------------------------------
 function s:P4OpenFileForEdit()
-    if (b:action == "add")
+    if filewritable(expand( "%:p" ) ) == 0
+        if s:P4IsCurrent() != 0
+            let sync = 0
+            if sync == 1
+                call s:P4ShellCommandCurrentBuffer( "sync" )
+            endif
+        endif
+    endif
+    if (b:headrev == "" || b:action == "add")
         let action = "add"
     else
         let action = "edit"
