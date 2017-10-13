@@ -23,9 +23,10 @@ let loaded_perforce=1
 augroup perforce
 
   " events
-  autocmd FileChangedRO * nested call <SID>P4OpenFileForEditWithPrompt()
+  autocmd FileChangedRO * nested call <SID>P4OpenFileForEdit()
   autocmd BufRead * call <SID>P4InitialBufferVariables()
-  autocmd BufRead * call <SID>P4GetFileStatus()
+  " NOTE: This will make vim laggy when open file
+  "autocmd BufRead * call <SID>P4GetFileStatus()
 
   " Keyboard shortcuts - default <Leader> is \
   map <silent> <Leader><Leader> :echo <SID>P4GetInfo()<CR>
@@ -102,12 +103,8 @@ if( strlen( &rulerformat ) == 0 ) && ( p4SetRuler == 1 )
   set rulerformat=%60(%=%{P4RulerStatus()}\ %4l,%-3c\ %3p%%%)
 endif
 
-"Basic check for p4-enablement
-"if executable( "p4.exe" )
-    let s:PerforceExecutable="p4" 
-"    else
-"  augroup! perforce
-"endif 
+" User need to make sure p4 console version is installed correctly
+let s:PerforceExecutable="p4"
 
 "----------------------------------------------------------------------------
 " Minimal execution of a p4 command, followed by re-opening
@@ -115,18 +112,16 @@ endif
 " mainly for use by Perforce command.
 "----------------------------------------------------------------------------
 function s:P4ShellCommandAndEditCurrentBuffer( sCmd )
-		 call s:P4ShellCommandCurrentBuffer( a:sCmd )
-		 e!
+    call s:P4ShellCommandCurrentBuffer( a:sCmd )
+    e!
 endfunction
 
 "----------------------------------------------------------------------------
 " A wrapper around a p4 command line for the current buffer
 "----------------------------------------------------------------------------
 function s:P4ShellCommandCurrentBuffer( sCmd )
-     let filename = expand( "%:p" )
-
-     return s:P4ShellCommand( a:sCmd . " " . filename )
-     "let foo = confirm("Execute " . a:sCmd . " " . filename )
+    let filename = expand( "%:p" )
+    return s:P4ShellCommand( a:sCmd . " " . filename )
 endfunction
 
 "----------------------------------------------------------------------------
@@ -152,9 +147,6 @@ endfunction
 " Return the p4 command line string
 "----------------------------------------------------------------------------
 function s:P4GetShellCommand( sCmd )
-    if !exists('s:PerforceExecutable')
-      let s:PerforceExecutable = "p4"
-    endif
     return s:PerforceExecutable . " " . a:sCmd
 endfunction
 
@@ -326,39 +318,25 @@ endfunction
 function s:P4OpenFileForEdit()
     if filewritable(expand( "%:p" ) ) == 0
         if s:P4IsCurrent() != 0
-            let sync = confirm("You do not have the head revision.  p4 sync the file before opening?", "&Yes\n&No", 1, "Question")
+            let sync = 0
             if sync == 1
                 call s:P4ShellCommandCurrentBuffer( "sync" )
             endif
         endif
-    endif
-    if !exists("b:headrev")
-      let b:headrev = ""
     endif
     if (b:headrev == "" || b:action == "add")
         let action = "add"
     else
         let action = "edit"
     endif
-    let listnum = ""
-    let listnum = s:P4GetChangelist( "Current changelists:\n" . s:P4GetChangelists(0) . "\nEnter changelist number: ", b:changelist )
-"    if listnum == ""
-"        echomsg "No changelist specified. Edit cancelled."
-"        return
-"    endif
-    if !exists("listnum") || listnum == ""
-      "default changelist
-      call s:P4ShellCommandCurrentBuffer( action )
-    else
-      "let foo=confirm("changelist not empty: [" . listnum . "]")
-      call s:P4ShellCommandCurrentBuffer( action . " -c " . listnum )
-    endif
+    let listnum = "default"
+    call s:P4ShellCommandCurrentBuffer( action . " -c " . listnum )
     if v:errmsg != ""
         echoerr "Unable to open file for " action . ". " . v:errmsg
         return
     else
         e!
-        call s:P4RestoreLastPosition()   
+        call s:P4RestoreLastPosition()
     endif
 endfunction
 
@@ -376,12 +354,7 @@ endfunction
 function s:P4OpenFileForDeletion()
     let action=confirm("Mark file for deletion?" ,"&Yes\n&No", 2, "Question")
     if action == 1
-        let listnum = ""
-        let listnum = s:P4GetChangelist( "Current changelists:\n" . s:P4GetChangelists(0) . "\nEnter changelist number: ", "" )
-        if listnum == ""
-            echomsg "No changelist specified. Delete cancelled."
-            return
-        endif
+        let listnum = "default"
         call s:P4ShellCommandCurrentBuffer( "delete -c " . listnum )
         if v:errmsg != ""
             echoerr "Unable to mark file for deletion. " . v:errmsg
